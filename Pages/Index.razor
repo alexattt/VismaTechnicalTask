@@ -1,0 +1,16 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+@code {
+    /*
+     * te tiks izsaukts XmlActionService, tajā savukārt notiks failu nolasīšana balstoties uz last date (to paņems no db)
+     * jautājums vēl paliek aktuāls - vai lasot xml failus katram failam būs savi new models, kuriem uzreiz lieku iekšā attributes
+     * vai tomēr sākumā ir vērts izveidot tādu kā vienu DTO, un tad tajā visu salikt un vēlāk no tā ņemt? (šis laikam liekas labāk)
+     * vēl ir iespēja ParseSender un ParseReceiver padot apprec objektu, ParseHCPerson un ParseDept savukārt attiecīgi padot Receiver/Sender
+     * vēl jāizdomā kā parsot visus errorus, jo tie var būt daudzi, tātad vajag listu
+     * vairāk sliecos domāt, ka labāk ir XmlActionService foreach loop izveidot vienu "bluķi" ar info
+     * noparsojot AppRec, Receiver, Sender, Dept, HCPerson un ErrorReason listu (ja tādi ir)
+     * tālāk to visu 29. line padot uz atsevišķu servisu, kurš veic visu saglabāšanu DB utt.
+     */
+}
