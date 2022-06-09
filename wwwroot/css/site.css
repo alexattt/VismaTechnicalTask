@@ -48,3 +48,35 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.info-container {
+    margin: 30px 0px;
+}
+
+li {
+    margin: 8px 0px;
+}
+
+.bold-accent {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.custom-btn {
+    background-color: #cccccc;
+    border: none;
+    outline: none;
+    padding: 5px 12px;
+    border-radius: 3px;
+    font-weight: bold;
+    transition: ease-in-out 0.2s;
+}
+
+    .custom-btn:focus {
+        outline: none;
+    }
+
+    .custom-btn:hover {
+        outline: none;
+        background-color: #dedcdc;
+    }

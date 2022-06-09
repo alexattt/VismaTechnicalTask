@@ -17,7 +17,7 @@ namespace VismaTechnicalTask.Services
             _dataContext.Database.EnsureCreated();
         }
 
-        public async Task<HelperInfo> GetLastAddedXmlDate(int Id)
+        public async Task<HelperInfo> GetLastAddedXmlDate()
         {
             List<HelperInfo> helperInfos = await _dataContext.HelperInfo.ToListAsync();
             return helperInfos.First();
