@@ -8,33 +8,6 @@ namespace VismaTechnicalTask.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Depts",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TypeId = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Depts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "HcPersons",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TypeId = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HcPersons", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "HelperInfo",
                 columns: table => new
                 {
@@ -51,14 +24,21 @@ namespace VismaTechnicalTask.Migrations
                 name: "Receivers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReceiverId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MedSpeciality = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TypeId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeptID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    HCPersonID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DeptId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeptType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeptName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeptTypeId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HCPersonId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HCPersonName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HCPersonTypeId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AdrType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StreetAdr = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -68,32 +48,27 @@ namespace VismaTechnicalTask.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Receivers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Receivers_Depts_DeptID",
-                        column: x => x.DeptID,
-                        principalTable: "Depts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Receivers_HcPersons_HCPersonID",
-                        column: x => x.HCPersonID,
-                        principalTable: "HcPersons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Senders",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SenderId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MedSpeciality = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TypeId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeptID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    HCPersonID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DeptId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeptType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeptName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeptTypeId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HCPersonId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HCPersonName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HCPersonTypeId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AdrType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StreetAdr = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -103,18 +78,6 @@ namespace VismaTechnicalTask.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Senders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Senders_Depts_DeptID",
-                        column: x => x.DeptID,
-                        principalTable: "Depts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Senders_HcPersons_HCPersonID",
-                        column: x => x.HCPersonID,
-                        principalTable: "HcPersons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -125,8 +88,8 @@ namespace VismaTechnicalTask.Migrations
                     GenDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MsgType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MIGversion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SenderID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ReceiverID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SenderID = table.Column<int>(type: "int", nullable: false),
+                    ReceiverID = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -137,13 +100,13 @@ namespace VismaTechnicalTask.Migrations
                         column: x => x.ReceiverID,
                         principalTable: "Receivers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AppRecs_Senders_SenderID",
                         column: x => x.SenderID,
                         principalTable: "Senders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -155,7 +118,8 @@ namespace VismaTechnicalTask.Migrations
                     AppRecID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Err_S = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Err_V = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Err_DN = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Err_DN = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Err_OT = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -182,26 +146,6 @@ namespace VismaTechnicalTask.Migrations
                 name: "IX_ErrorReasons_AppRecID",
                 table: "ErrorReasons",
                 column: "AppRecID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Receivers_DeptID",
-                table: "Receivers",
-                column: "DeptID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Receivers_HCPersonID",
-                table: "Receivers",
-                column: "HCPersonID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Senders_DeptID",
-                table: "Senders",
-                column: "DeptID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Senders_HCPersonID",
-                table: "Senders",
-                column: "HCPersonID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -220,12 +164,6 @@ namespace VismaTechnicalTask.Migrations
 
             migrationBuilder.DropTable(
                 name: "Senders");
-
-            migrationBuilder.DropTable(
-                name: "Depts");
-
-            migrationBuilder.DropTable(
-                name: "HcPersons");
         }
     }
 }

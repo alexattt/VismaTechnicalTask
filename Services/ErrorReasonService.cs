@@ -22,10 +22,11 @@ namespace VismaTechnicalTask.Services
             return errorReasons;
         }
 
-        public async Task InsertErrorReasonAsync(ErrorReason errorReason)
+        public async Task<bool> InsertErrorReasonAsync(ErrorReason errorReason)
         {
             await _dataContext.ErrorReasons.AddAsync(errorReason);
             await _dataContext.SaveChangesAsync();
+            return true;
         }
     }
 }

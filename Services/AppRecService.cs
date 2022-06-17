@@ -22,10 +22,16 @@ namespace VismaTechnicalTask.Services
             return apprecs;
         }
 
-        public async Task InsertAppRecAsync(AppRec apprec)
+        public async Task<AppRec> GetAppRecById(string id)
+        {
+            return await _dataContext.AppRecs.FindAsync(id);
+        }
+
+        public async Task<bool> InsertAppRecAsync(AppRec apprec)
         {
             await _dataContext.AppRecs.AddAsync(apprec);
             await _dataContext.SaveChangesAsync();
+            return true;
         }
     }
 }

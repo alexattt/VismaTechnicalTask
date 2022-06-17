@@ -7,6 +7,7 @@ namespace VismaTechnicalTask.Services
     public interface IAppRecService
     {
         Task<List<AppRec>> GetAllAppRecsAsync();
-        Task InsertAppRecAsync(AppRec apprec);
+        Task<AppRec> GetAppRecById(string id);
+        Task<bool> InsertAppRecAsync(AppRec apprec);
     }
 }

@@ -1,7 +1,14 @@
 ﻿@page "/"
 @using VismaTechnicalTask.Services
 @using VismaTechnicalTask.Models
+@using VismaTechnicalTask.HelperFunctions
 @inject IHelperInfoService IHelperInfoService
+@inject IAppRecService IAppRecService
+@inject IErrorReasonService IErrorReasonService
+@inject IHelperInfoService IHelperInfoService
+@inject IReceiverService IReceiverService
+@inject ISenderService ISenderService
+@inject NavigationManager NavManager
 
 <div class="info-container">
     <h4>Information about project</h4>
@@ -24,16 +31,22 @@
 
 <div class="xml-add-container">
     <p>By clicking on button below, you can update database with all XML receipts, which were created after <span class="bold-accent">@helperInfo.LastAddedXmlDate</span></p>
-    <button class="custom-btn">XML to DB</button>
+    <button class="custom-btn" @onclick="() => AddXmls()">XML to DB</button>
 </div>
 
 @code {
     HelperInfo helperInfo = new HelperInfo();
+    XmlParsing xmlParsing = new XmlParsing();
 
     protected override async Task OnInitializedAsync()
     {
         helperInfo = await IHelperInfoService.GetLastAddedXmlDate();
     }
 
-
+    //TODO: jāturpina testēt un jāiepusho githubā 
+    public async void AddXmls() {
+        XmlParsing xmlParsing = new XmlParsing(IAppRecService, IErrorReasonService, ISenderService, IReceiverService,IHelperInfoService);
+        await xmlParsing.ReadFiles(helperInfo.LastAddedXmlDate);
+        NavManager.NavigateTo("/", forceLoad: true);
+    }
 }

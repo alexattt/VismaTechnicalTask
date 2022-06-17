@@ -19,11 +19,11 @@ namespace VismaTechnicalTask.Services
 
         public async Task<HelperInfo> GetLastAddedXmlDate()
         {
-            List<HelperInfo> helperInfos = await _dataContext.HelperInfo.ToListAsync();
+            List<HelperInfo> helperInfos = await _dataContext.HelperInfo.OrderByDescending(el => el.LastAddedXmlDate).ToListAsync();
             return helperInfos.First();
         }
 
-        public async Task InsertLastAddedXmlDate(HelperInfo helperInfo)
+        public async Task UpdateLastAddedXmlDate(HelperInfo helperInfo)
         {
             await _dataContext.HelperInfo.AddAsync(helperInfo);
             await _dataContext.SaveChangesAsync();

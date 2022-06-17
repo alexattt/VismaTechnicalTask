@@ -10,7 +10,7 @@ using VismaTechnicalTask.Data;
 namespace VismaTechnicalTask.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220605124307_InitialMigration")]
+    [Migration("20220614210124_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,11 +35,11 @@ namespace VismaTechnicalTask.Migrations
                     b.Property<string>("MsgType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ReceiverID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ReceiverID")
+                        .HasColumnType("int");
 
-                    b.Property<string>("SenderID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("SenderID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
@@ -51,25 +51,6 @@ namespace VismaTechnicalTask.Migrations
                     b.HasIndex("SenderID");
 
                     b.ToTable("AppRecs");
-                });
-
-            modelBuilder.Entity("VismaTechnicalTask.Models.Dept", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TypeId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Depts");
                 });
 
             modelBuilder.Entity("VismaTechnicalTask.Models.ErrorReason", b =>
@@ -85,6 +66,9 @@ namespace VismaTechnicalTask.Migrations
                     b.Property<string>("Err_DN")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Err_OT")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Err_S")
                         .HasColumnType("nvarchar(max)");
 
@@ -96,22 +80,6 @@ namespace VismaTechnicalTask.Migrations
                     b.HasIndex("AppRecID");
 
                     b.ToTable("ErrorReasons");
-                });
-
-            modelBuilder.Entity("VismaTechnicalTask.Models.HCPerson", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TypeId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("HcPersons");
                 });
 
             modelBuilder.Entity("VismaTechnicalTask.Models.HelperInfo", b =>
@@ -131,8 +99,10 @@ namespace VismaTechnicalTask.Migrations
 
             modelBuilder.Entity("VismaTechnicalTask.Models.Receiver", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AdrType")
                         .HasColumnType("nvarchar(max)");
@@ -140,11 +110,26 @@ namespace VismaTechnicalTask.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DeptID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("DeptId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("HCPersonID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("DeptName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeptType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeptTypeId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HCPersonId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HCPersonName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HCPersonTypeId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MedSpeciality")
                         .HasColumnType("nvarchar(max)");
@@ -153,6 +138,9 @@ namespace VismaTechnicalTask.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceiverId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -171,18 +159,16 @@ namespace VismaTechnicalTask.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DeptID");
-
-                    b.HasIndex("HCPersonID");
 
                     b.ToTable("Receivers");
                 });
 
             modelBuilder.Entity("VismaTechnicalTask.Models.Sender", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AdrType")
                         .HasColumnType("nvarchar(max)");
@@ -190,11 +176,26 @@ namespace VismaTechnicalTask.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DeptID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("DeptId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("HCPersonID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("DeptName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeptType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeptTypeId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HCPersonId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HCPersonName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HCPersonTypeId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MedSpeciality")
                         .HasColumnType("nvarchar(max)");
@@ -206,6 +207,9 @@ namespace VismaTechnicalTask.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StreetAdr")
@@ -221,10 +225,6 @@ namespace VismaTechnicalTask.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DeptID");
-
-                    b.HasIndex("HCPersonID");
 
                     b.ToTable("Senders");
                 });
@@ -233,11 +233,15 @@ namespace VismaTechnicalTask.Migrations
                 {
                     b.HasOne("VismaTechnicalTask.Models.Receiver", "Receiver")
                         .WithMany()
-                        .HasForeignKey("ReceiverID");
+                        .HasForeignKey("ReceiverID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("VismaTechnicalTask.Models.Sender", "Sender")
                         .WithMany()
-                        .HasForeignKey("SenderID");
+                        .HasForeignKey("SenderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Receiver");
 
@@ -251,36 +255,6 @@ namespace VismaTechnicalTask.Migrations
                         .HasForeignKey("AppRecID");
 
                     b.Navigation("AppRec");
-                });
-
-            modelBuilder.Entity("VismaTechnicalTask.Models.Receiver", b =>
-                {
-                    b.HasOne("VismaTechnicalTask.Models.Dept", "Dept")
-                        .WithMany()
-                        .HasForeignKey("DeptID");
-
-                    b.HasOne("VismaTechnicalTask.Models.HCPerson", "HCPerson")
-                        .WithMany()
-                        .HasForeignKey("HCPersonID");
-
-                    b.Navigation("Dept");
-
-                    b.Navigation("HCPerson");
-                });
-
-            modelBuilder.Entity("VismaTechnicalTask.Models.Sender", b =>
-                {
-                    b.HasOne("VismaTechnicalTask.Models.Dept", "Dept")
-                        .WithMany()
-                        .HasForeignKey("DeptID");
-
-                    b.HasOne("VismaTechnicalTask.Models.HCPerson", "HCPerson")
-                        .WithMany()
-                        .HasForeignKey("HCPersonID");
-
-                    b.Navigation("Dept");
-
-                    b.Navigation("HCPerson");
                 });
 #pragma warning restore 612, 618
         }

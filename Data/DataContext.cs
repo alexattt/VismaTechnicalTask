@@ -13,8 +13,6 @@ namespace VismaTechnicalTask.Data
         public DbSet<AppRec> AppRecs { get; set; }
         public DbSet<Sender> Senders { get; set; }
         public DbSet<Receiver> Receivers { get; set; }
-        public DbSet<Dept> Depts { get; set; }
-        public DbSet<HCPerson> HCPersons { get; set; }
         public DbSet<ErrorReason> ErrorReasons { get; set; }
         public DbSet<HelperInfo> HelperInfo { get; set; }
     }

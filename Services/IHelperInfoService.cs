@@ -6,6 +6,6 @@ namespace VismaTechnicalTask.Services
     public interface IHelperInfoService
     {
         Task<HelperInfo> GetLastAddedXmlDate();
-        Task InsertLastAddedXmlDate(HelperInfo helperInfo);
+        Task UpdateLastAddedXmlDate(HelperInfo helperInfo);
     }
 }

@@ -7,6 +7,6 @@ namespace VismaTechnicalTask.Services
     public interface IErrorReasonService
     {
         Task<List<ErrorReason>> GetAllErrorReasonsAsync();
-        Task InsertErrorReasonAsync(ErrorReason errorReason);
+        Task<bool> InsertErrorReasonAsync(ErrorReason errorReason);
     }
 }

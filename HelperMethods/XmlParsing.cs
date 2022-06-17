@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using VismaTechnicalTask.HelperMethods;
 using VismaTechnicalTask.Models;
 using VismaTechnicalTask.Services;
 
@@ -12,21 +13,33 @@ namespace VismaTechnicalTask.HelperFunctions
     public class XmlParsing
     {
         private IHelperInfoService IHelperInfoService;
+        private IAppRecService IAppRecService;
+        private IErrorReasonService IErrorReasonService;
+        private IReceiverService IReceiverService;
+        private ISenderService ISenderService;
 
-        public XmlParsing(IHelperInfoService IHelperInfoService)
+        public XmlParsing()
+        {
+        }
+        public XmlParsing(IAppRecService IAppRecService, IErrorReasonService IErrorReasonService, 
+                          ISenderService ISenderService, IReceiverService IReceiverService, IHelperInfoService IHelperInfoService)
         {
             this.IHelperInfoService = IHelperInfoService;
+            this.IAppRecService = IAppRecService;
+            this.IErrorReasonService = IErrorReasonService;
+            this.IReceiverService = IReceiverService;
+            this.ISenderService = ISenderService;
         }
 
         public static AppRec apprec;
         public static Sender sender;
         public static Receiver receiver;
-        public static HCPerson hcperson;
-        public static Dept dept;
         public static List<ErrorReason> errorReasons;
 
         public async Task ReadFiles(DateTime lastXmlAddDate)
         {
+            EntitySaving EntitySaving = new EntitySaving(IAppRecService, IErrorReasonService, IReceiverService, ISenderService);
+
             var path = @"C:\Users\aleks\Desktop\visma_task\xml_receipts";
             IOrderedEnumerable<string> files;
             var lastFile = "";
@@ -44,15 +57,20 @@ namespace VismaTechnicalTask.HelperFunctions
             foreach (var file in files)
             {
                 apprec = new AppRec();
+                sender = new Sender();
+                receiver = new Receiver();
+                errorReasons = new List<ErrorReason>();
+
                 XmlDocument doc = new XmlDocument();
                 doc.Load(file);
                 ParseXmlFile(doc.DocumentElement);
+
                 lastFile = file;
-                // TODO: nepieciešama HelperMethod klases izveidošana, kurā notiks visa šitā saglabāšana
-                //EntitySaving.Save(apprec, errorReasons, sender, receiver, hcperson, dept);
+
+                await EntitySaving.Save(apprec, errorReasons, sender, receiver);
             }
 
-            await IHelperInfoService.InsertLastAddedXmlDate(new HelperInfo()
+            await IHelperInfoService.UpdateLastAddedXmlDate(new HelperInfo()
                 { LastAddedXmlDate = new FileInfo(lastFile).CreationTimeUtc });
         }
 
@@ -189,13 +207,13 @@ namespace VismaTechnicalTask.HelperFunctions
                 {
                     if (type == "Sender")
                     {
-                        apprec.SenderID = instNode.InnerXml;
-                        sender.Id = instNode.InnerXml;
+                        //apprec.SenderID = instNode.InnerXml;
+                        sender.SenderId = instNode.InnerXml;
                     }
                     else
                     {
-                        apprec.ReceiverID = instNode.InnerXml;
-                        receiver.Id = instNode.InnerXml;
+                        //apprec.ReceiverID = instNode.InnerXml;
+                        receiver.ReceiverId = instNode.InnerXml;
                     }
                 }
                 if (instNode.Name == "TypeId")
@@ -240,13 +258,13 @@ namespace VismaTechnicalTask.HelperFunctions
                 {
                     if (type == "Sender")
                     {
-                        apprec.SenderID = hcprofNode.InnerXml;
-                        sender.Id = hcprofNode.InnerXml;
+                        //apprec.SenderID = hcprofNode.InnerXml;
+                        sender.SenderId = hcprofNode.InnerXml;
                     }
                     else
                     {
-                        apprec.ReceiverID = hcprofNode.InnerXml;
-                        receiver.Id = hcprofNode.InnerXml;
+                        //apprec.ReceiverID = hcprofNode.InnerXml;
+                        receiver.ReceiverId = hcprofNode.InnerXml;
                     }
                 }
                 if (hcprofNode.Name == "TypeId")
@@ -270,20 +288,25 @@ namespace VismaTechnicalTask.HelperFunctions
             {
                 if (hcpersonNode.Name == "Name")
                 {
-                    hcperson.Name = hcpersonNode.InnerXml;
+                    if (type == "Sender")
+                        sender.HCPersonName = hcpersonNode.InnerXml;
+                    else
+                        receiver.HCPersonName = hcpersonNode.InnerXml;
                 }
                 if (hcpersonNode.Name == "Id")
                 {
                     if (type == "Sender")
-                        sender.HCPersonID = hcpersonNode.InnerXml;
+                        sender.HCPersonId = hcpersonNode.InnerXml;
                     else
-                        receiver.HCPersonID = hcpersonNode.InnerXml;
-                    hcperson.Id = hcpersonNode.InnerXml;
+                        receiver.HCPersonId = hcpersonNode.InnerXml;
                 }
                 if (hcpersonNode.Name == "TypeId")
                 {
                     if (hcpersonNode.Attributes["V"] != null)
-                        hcperson.TypeId = hcpersonNode.Attributes["V"].Value;
+                        if (type == "Sender")
+                            sender.HCPersonTypeId = hcpersonNode.InnerXml;
+                        else
+                            receiver.HCPersonTypeId = hcpersonNode.InnerXml;
                 }
                 // if (hcpersonNode.Name == "AdditionalId")
                 // {
@@ -299,24 +322,32 @@ namespace VismaTechnicalTask.HelperFunctions
                 if (deptNode.Name == "Type")
                 {
                     if (deptNode.Attributes["V"] != null)
-                        dept.Type = deptNode.Attributes["V"].Value;
+                        if (type == "Sender")
+                            sender.DeptType = deptNode.InnerXml;
+                        else
+                            receiver.DeptType = deptNode.InnerXml;
                 }
                 if (deptNode.Name == "Name")
                 {
-                    dept.Name = deptNode.InnerXml;
+                    if (type == "Sender")
+                        sender.DeptName = deptNode.InnerXml;
+                    else
+                        receiver.DeptName = deptNode.InnerXml;
                 }
                 if (deptNode.Name == "Id")
                 {
                     if (type == "Sender")
-                        sender.DeptID = deptNode.InnerXml;
+                        sender.DeptId = deptNode.InnerXml;
                     else
-                        receiver.DeptID = deptNode.InnerXml;
-                    dept.Id = deptNode.InnerXml;
+                        receiver.DeptId = deptNode.InnerXml;
                 }
                 if (deptNode.Name == "TypeId")
                 {
                     if (deptNode.Attributes["V"] != null)
-                        dept.TypeId = deptNode.Attributes["V"].Value;
+                        if (type == "Sender")
+                            sender.DeptTypeId = deptNode.Attributes["V"].Value;
+                        else
+                            receiver.DeptTypeId = deptNode.Attributes["V"].Value;
                 }
             }
         }

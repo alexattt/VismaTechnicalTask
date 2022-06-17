@@ -7,6 +7,8 @@ namespace VismaTechnicalTask.Services
     public interface IReceiverService
     {
         Task<List<Receiver>> GetAllReceiversAsync();
-        Task InsertReceiverAsync(Receiver receiver);
+        Task<Receiver> GetReceiverById(int id);
+        Task<int> CheckReceiverExists(Receiver rec);
+        Task<int> InsertReceiverAsync(Receiver receiver);
     }
 }

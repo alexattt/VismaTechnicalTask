@@ -7,6 +7,8 @@ namespace VismaTechnicalTask.Services
     public interface ISenderService
     {
         Task<List<Sender>> GetAllSendersAsync();
-        Task InsertSenderAsync(Sender sender);
+        Task<Sender> GetSenderById(int id);
+        Task<int> CheckSenderExists(Sender se);
+        Task<int> InsertSenderAsync(Sender sender);
     }
 }

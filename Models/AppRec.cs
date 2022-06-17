@@ -16,11 +16,11 @@ namespace VismaTechnicalTask.Models
         public string MIGversion { get; set; }
 
         [ForeignKey("Sender")]
-        public string SenderID { get; set; }
+        public int SenderID { get; set; }
         public virtual Sender Sender { get; set; }
 
         [ForeignKey("Receiver")]
-        public string ReceiverID { get; set; }
+        public int ReceiverID { get; set; }
         public virtual Receiver Receiver { get; set; }
 
         public string Status { get; set; }

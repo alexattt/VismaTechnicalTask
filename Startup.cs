@@ -28,9 +28,7 @@ namespace VismaTechnicalTask
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<IHelperInfoService, HelperInfoService>();
             services.AddScoped<IAppRecService, AppRecService>();
-            services.AddScoped<IDeptService, DeptService>();
             services.AddScoped<IErrorReasonService, ErrorReasonService>();
-            services.AddScoped<IHCPersonService, HCPersonService>();
             services.AddScoped<IReceiverService, ReceiverService>();
             services.AddScoped<ISenderService, SenderService>();
 

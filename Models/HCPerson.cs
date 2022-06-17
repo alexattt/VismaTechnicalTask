@@ -5,7 +5,8 @@ namespace VismaTechnicalTask.Models
     public class HCPerson
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
+        public string HCPersonId { get; set; }
 
         public string Name { get; set; }
 
