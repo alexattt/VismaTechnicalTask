@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using VismaTechnicalTask.Data;
+using VismaTechnicalTask.HelperModels;
 using VismaTechnicalTask.Models;
 
 namespace VismaTechnicalTask.Services
@@ -25,6 +29,33 @@ namespace VismaTechnicalTask.Services
         public async Task<AppRec> GetAppRecById(string id)
         {
             return await _dataContext.AppRecs.FindAsync(id);
+        }
+
+        public async Task<List<SenderStatusRatio>> GetSenderMonthlyRatio(string SenderIdentifier, string StartDate, string EndDate)
+        {
+            List<SenderStatusRatio> senderRatios =
+                await _dataContext.SenderStatusRatios
+                    .FromSqlInterpolated($"EXEC dbo.GetMonthlySenderRatio {SenderIdentifier}, {StartDate}, {EndDate}")
+                    .ToListAsync();
+
+            foreach (var ratios in senderRatios)
+            {
+                if (ratios.Status == "1")
+                {
+                    ratios.Status = "OK";
+                }
+                else if (ratios.Status == "2")
+                {
+                    ratios.Status = "Avvist";
+                }
+                else
+                {
+                    ratios.Status = "OK, feil i delmelding";
+                }
+            }
+
+            return senderRatios;
+
         }
 
         public async Task<bool> InsertAppRecAsync(AppRec apprec)

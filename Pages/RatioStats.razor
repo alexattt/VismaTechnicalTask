@@ -1,7 +1,96 @@
 ﻿@page "/success-fail-ratio"
+@inject ISenderService ISenderService
+@inject IAppRecService IAppRecService
+@using VismaTechnicalTask.Models
+@using VismaTechnicalTask.Services
+@using VismaTechnicalTask.HelperModels
 
-<h3>RatioStats</h3>
+<h2>Success/fail ratio stats</h2>
+
+<div class="ratio-container">
+    <div class="input-group">
+        
+        <label for="Sender">Choose sender name or ID: </label>
+        <select id="Sender" @onchange="OnSenderChange">
+            @if (!(allSenders is null))
+            {
+                <option value=""></option>
+                @foreach (var s in allSenders)
+                {
+                    @if (s.Name != null)
+                    {
+                        <option value="@s.Name">
+                            @s.Name
+                        </option>
+                    }
+                    else if (s.SenderId != null)
+                    {
+                        <option value="@s.SenderId">
+                            @s.SenderId
+                        </option>
+                    }
+                }
+            }
+        </select>
+        
+        <label for="month">Choose month:</label>
+        <input type="month" id="ratioMonth" name="ratioMonth"
+               min="1999-01" max="@currentMonth" value="@currentMonth" @onchange="OnMonthChange">
+
+        <button class="custom-btn" @onclick="() => GetStats()">Get Stats</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-lg-6 offset-lg-3 my-5">
+            @if (statusRatio.Any())
+            {
+                <RadzenChart>
+                    <RadzenPieSeries Data="@statusRatio" Title="Status Count" CategoryProperty="Status" ValueProperty="StatusCount"/>
+                </RadzenChart>
+            }
+            else
+            {
+                <div class="alert alert-primary">No data to display</div>
+            }
+        </div>
+    </div>
+</div>
 
 @code {
+    IEnumerable<Sender> allSenders;
+    List<SenderStatusRatio> statusRatio = new List<SenderStatusRatio>();
+    String selectedSender = "";
+    String selectedMonth = "";
+    String startDate = "";
+    String endDate = "";
+    String currentMonth = DateTime.Now.Year + "-" + DateTime.Now.Month.ToString("00");
 
+    protected override async Task OnInitializedAsync()
+    {
+        allSenders = (await ISenderService.GetAllSendersAsync()).ToList();
+    }
+
+    void OnSenderChange(ChangeEventArgs e)
+    {
+        selectedSender = e.Value.ToString();
+    }
+
+    void OnMonthChange(ChangeEventArgs e)
+    {
+        if (e.Value.ToString() != "")
+        {
+            selectedMonth = e.Value.ToString();
+            int lastDay = DateTime.DaysInMonth (Convert.ToDateTime(selectedMonth).Year, Convert.ToDateTime(selectedMonth).Month);
+
+            startDate = Convert.ToDateTime(selectedMonth).ToString("yyyy-MM-dd");
+            endDate = selectedMonth + "-" + lastDay;
+        }
+    }
+
+    async Task GetStats()
+    {
+        statusRatio = await IAppRecService.GetSenderMonthlyRatio(selectedSender, startDate, endDate);
+    }
 }

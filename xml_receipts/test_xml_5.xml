@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AppRec xmlns="http://www.kith.no/xmlstds/apprec/2004-11-21" xmlns:xsd="http://www.w3.org/2001/XMLSchema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kith.no/xmlstds/apprec/2004-11-21 AppRec-v1-2004-11-21.xsd">
+	<MsgType V="APPREC"/>
+	<MIGversion>1.0 2004-11-21</MIGversion>
+	<GenDate>2004-12-20T10:27:22</GenDate>
+	<Id>a365727e-b123-5a17-fd96-a672d176ca31</Id>
+	<Sender>
+		<Role V="SENDER"/>
+		<HCP>
+			<Inst>
+				<Name>Kreftregisteret</Name>
+				<Id>974771381</Id>
+				<TypeId V="ENH"/>
+			</Inst>
+			<Address>
+				<Type V="PST"/>
+				<TeleAddress V="mailto:edi@kreftregisteret.no"/>
+			</Address>
+		</HCP>
+	</Sender>
+	<Receiver>
+		<Role V="RECEIVER"/>
+		<HCP>
+      <Inst>
+        <Name>Kattskinnet legesenter</Name>
+        <HCPerson>
+          <Name>Oskar Nilsen</Name>
+          <Id>009145867</Id>
+          <TypeId V="HPR"/>
+        </HCPerson>
+      </Inst>
+			<Address>
+				<Type V="PST"/>
+				<TeleAddress V="onilsen@noline.no"/>
+			</Address>
+		</HCP>
+	</Receiver>
+  <Status V="1" DN="OK"/>
+	<OriginalMsgId>
+		<MsgType V="CANCER_BR" DN="Meldeskjema brystkreft"/>
+		<IssueDate>2004-12-15T09:37:23</IssueDate>
+		<Id>bf7d32f2-e745-148b-bf9f-acfeefd36743</Id>
+	</OriginalMsgId>
+</AppRec>

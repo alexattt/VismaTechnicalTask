@@ -80,3 +80,50 @@ li {
         outline: none;
         background-color: #dedcdc;
     }
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    width: 23vw;
+}
+    .input-group .custom-btn {
+        width: 100px;
+        margin-top: 10px;
+    }
+
+.input-group input, select {
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 5px 10px;
+    margin-top: 5px;
+}
+
+    .input-group label:not(:first-child) {
+        margin-top: 10px;
+    }
+
+.main h4 {
+    margin-top: 30px;
+}
+
+.error-container  ol {
+    margin-top: 30px;
+}
+
+.alert {
+    width: 23vw;
+    margin-top: 20px;
+}
+
+.failed-period-container .input-group {
+    margin-bottom: 20px;
+}
+
+.rz-growl-item-container.rz-state-highlight.rz-growl-message-error, .rz-growl-item-container.rz-state-highlight.rz-growl-message-success {
+    position: absolute;
+    right: -90%;
+    width: 400px;
+    bottom: 100%;
+    margin-right: 50vw;
+    margin-bottom: -30vh;
+}

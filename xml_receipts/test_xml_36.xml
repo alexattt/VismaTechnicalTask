@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AppRec xmlns="http://www.kith.no/xmlstds/apprec/2004-11-21" xmlns:xsd="http://www.w3.org/2001/XMLSchema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kith.no/xmlstds/apprec/2004-11-21 AppRec-v1-2004-11-21.xsd">
+	<MsgType V="APPREC"/>
+	<MIGversion>1.0 2004-11-21</MIGversion>
+	<GenDate>2005-01-10T09:17:31</GenDate>
+	<Id>737ac118-a103-5537-482c-a504d88c122</Id>
+  <Sender>
+    <Role V="SENDER"/>
+    <HCP>
+      <Inst>
+        <Name>TestInstitution</Name>
+        <Id>974771382</Id>
+        <TypeId V="ENH"/>
+      </Inst>
+      <Address>
+        <Type V="PST"/>
+        <TeleAddress V="mailto:edi@testinst.no"/>
+      </Address>
+    </HCP>
+  </Sender>
+	<Receiver>
+		<Role V="RECEIVER"/>
+		<HCP>
+      <HCProf>
+        <Name>Jason Martinsen</Name>
+        <Id>009161347</Id>
+        <TypeId V="HPR" />
+      </HCProf>
+			<Address>
+				<Type V="PST"/>
+				<TeleAddress V="jsonm@gmail.com"/>
+			</Address>
+		</HCP>
+	</Receiver>
+  <Status V="1" DN="OK"/>
+	<OriginalMsgId>
+		<MsgType V="CANCER_BR" DN="Meldeskjema brystkreft"/>
+		<IssueDate>2005-01-06T16:13:41</IssueDate>
+		<Id>1f41469b-e211-437a-537d-b1e79fa78352</Id>
+	</OriginalMsgId>
+</AppRec>

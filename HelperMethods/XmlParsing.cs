@@ -21,6 +21,7 @@ namespace VismaTechnicalTask.HelperFunctions
         public XmlParsing()
         {
         }
+
         public XmlParsing(IAppRecService IAppRecService, IErrorReasonService IErrorReasonService, 
                           ISenderService ISenderService, IReceiverService IReceiverService, IHelperInfoService IHelperInfoService)
         {
@@ -36,11 +37,12 @@ namespace VismaTechnicalTask.HelperFunctions
         public static Receiver receiver;
         public static List<ErrorReason> errorReasons;
 
-        public async Task ReadFiles(DateTime lastXmlAddDate)
+        public async Task<String> ReadFiles(DateTime lastXmlAddDate)
         {
             EntitySaving EntitySaving = new EntitySaving(IAppRecService, IErrorReasonService, IReceiverService, ISenderService);
 
-            var path = @"C:\Users\aleks\Desktop\visma_task\xml_receipts";
+            var path = @"xml_receipts";
+
             IOrderedEnumerable<string> files;
             var lastFile = "";
 
@@ -50,7 +52,7 @@ namespace VismaTechnicalTask.HelperFunctions
             }
             else
             {
-                files = Directory.GetFiles(path).Where(f => Convert.ToDateTime(new FileInfo(f).CreationTimeUtc) >= lastXmlAddDate)
+                files = Directory.GetFiles(path).Where(f => Convert.ToDateTime(new FileInfo(f).CreationTimeUtc) > lastXmlAddDate)
                                                 .OrderBy(f => new FileInfo(f).CreationTimeUtc);
             }
 
@@ -67,11 +69,22 @@ namespace VismaTechnicalTask.HelperFunctions
 
                 lastFile = file;
 
-                await EntitySaving.Save(apprec, errorReasons, sender, receiver);
+                String entitySavingRes = await EntitySaving.Save(apprec, errorReasons, sender, receiver);
+
+                if (entitySavingRes != "Success")
+                {
+                    return entitySavingRes;
+                }
             }
 
-            await IHelperInfoService.UpdateLastAddedXmlDate(new HelperInfo()
-                { LastAddedXmlDate = new FileInfo(lastFile).CreationTimeUtc });
+            if (lastFile != "")
+            {
+
+                await IHelperInfoService.UpdateLastAddedXmlDate(new HelperInfo()
+                    { LastAddedXmlDate = new FileInfo(lastFile).CreationTimeUtc });
+            }
+
+            return "All XML receipts saved successfully!";
         }
 
         public static void ParseXmlFile(XmlNode appRecNodes)
@@ -92,11 +105,13 @@ namespace VismaTechnicalTask.HelperFunctions
                 }
                 if (appRecNode.Name == "MsgType")
                 {
-                    apprec.MsgType = appRecNode.Attributes["V"].Value;
+                    if (appRecNode.Attributes["V"] != null)
+                        apprec.MsgType = appRecNode.Attributes["V"].Value;
                 }
                 if (appRecNode.Name == "Status")
                 {
-                    apprec.Status = appRecNode.Attributes["V"].Value;
+                    if (appRecNode.Attributes["V"] != null)
+                        apprec.Status = appRecNode.Attributes["V"].Value;
                 }
                 if (appRecNode.Name == "Error")
                 {
@@ -403,9 +418,9 @@ namespace VismaTechnicalTask.HelperFunctions
             {
                 if (originalMsgNode.Name == "MsgType")
                 {
-                    Console.WriteLine("Original message MsgType V: " + originalMsgNode.Attributes["V"].Value);
-                    if (originalMsgNode.Attributes["V"] != null)
-                        Console.WriteLine("Original message MsgType DN: " + originalMsgNode.Attributes["DN"].Value);
+                    // Console.WriteLine("Original message MsgType V: " + originalMsgNode.Attributes["V"].Value);
+                    // if (originalMsgNode.Attributes["V"] != null)
+                    //     Console.WriteLine("Original message MsgType DN: " + originalMsgNode.Attributes["DN"].Value);
                 }
                 if (originalMsgNode.Name == "Id")
                 {

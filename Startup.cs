@@ -1,12 +1,16 @@
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Radzen;
 using VismaTechnicalTask.Data;
 using VismaTechnicalTask.Models;
 using VismaTechnicalTask.Services;
+using Microsoft.AspNetCore.ResponseCompression;
+using VismaTechnicalTask.Hubs;
 
 namespace VismaTechnicalTask
 {
@@ -31,6 +35,16 @@ namespace VismaTechnicalTask
             services.AddScoped<IErrorReasonService, ErrorReasonService>();
             services.AddScoped<IReceiverService, ReceiverService>();
             services.AddScoped<ISenderService, SenderService>();
+            services.AddScoped<DialogService>();
+            services.AddScoped<NotificationService>();
+            services.AddScoped<TooltipService>();
+            services.AddScoped<ContextMenuService>();
+
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
 
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -39,6 +53,8 @@ namespace VismaTechnicalTask
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseResponseCompression();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -58,6 +74,9 @@ namespace VismaTechnicalTask
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
+                endpoints.MapHub<ErrorTopHub>("/error-top-hub");
+                endpoints.MapHub<FailedApprecsHub>("/failed-apprecs-hub");
+                endpoints.MapHub<ParsingResponseHub>("/parsing-res-hub");
                 endpoints.MapFallbackToPage("/_Host");
             });
         }

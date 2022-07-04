@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using VismaTechnicalTask.HelperModels;
 using VismaTechnicalTask.Models;
 
 namespace VismaTechnicalTask.Data
@@ -15,5 +16,8 @@ namespace VismaTechnicalTask.Data
         public DbSet<Receiver> Receivers { get; set; }
         public DbSet<ErrorReason> ErrorReasons { get; set; }
         public DbSet<HelperInfo> HelperInfo { get; set; }
+        public virtual DbSet<SenderStatusRatio> SenderStatusRatios { get; set; }
+        public virtual DbSet<ErrorTop> ErrorTops { get; set; }
+        public virtual DbSet<FailedPeriodOverview> FailedPeriodOverviews { get; set; }
     }
 }

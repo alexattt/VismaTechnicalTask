@@ -1,7 +1,96 @@
 ﻿@page "/negative-delivery-periods"
+@using VismaTechnicalTask.HelperModels
+@using VismaTechnicalTask.Models
+@using VismaTechnicalTask.Services
+@using Microsoft.AspNetCore.SignalR.Client
 
-<h3>NegativeDeliveries</h3>
+@inject IErrorReasonService IErrorReasonService
+@inject ISenderService ISenderService
+@inject NavigationManager NavManager
+
+<h2>Periods of negative Apprecs received in Row</h2>
+
+<div class="failed-period-container global-error-periods">
+    <h4>Periods of negative Apprecs received in a row, Globally</h4>
+
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+        Data="@globalFailPeriods" TItem="FailedPeriodOverview" ColumnWidth="150px" LogicalFilterOperator="LogicalFilterOperator.And">
+        <Columns>
+            <RadzenDataGridColumn TItem="FailedPeriodOverview" Property="PeriodStart" Filterable="false" Title="Period Start" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="FailedPeriodOverview" Property="PeriodEnd" Filterable="false" Title="Period End" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="FailedPeriodOverview" Property="PeriodLength" Filterable="false" Title="Negative Apprecs received" TextAlign="TextAlign.Center" />
+        </Columns>
+    </RadzenDataGrid>
+</div>
+ 
+<div class="failed-period-container sender-error-periods">
+    <h4>Periods of negative Apprecs received in a row, per Sender</h4>
+    
+    <div class="input-group">
+        <label for="Sender">Choose sender name or ID: </label>
+        <select id="Sender" @onchange="OnSenderChange">
+            @if (!(allSenders is null))
+            {
+                <option value=""></option>
+                @foreach (var s in allSenders)
+                {
+                    @if (s.Name != null)
+                    {
+                        <option value="@s.Name">
+                            @s.Name
+                        </option>
+                    }
+                    else if (s.SenderId != null)
+                    {
+                        <option value="@s.SenderId">
+                            @s.SenderId
+                        </option>
+                    }
+                }
+            }
+        </select>
+    </div>
+
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@senderFailPeriods" TItem="FailedPeriodOverview" ColumnWidth="150px" LogicalFilterOperator="LogicalFilterOperator.And">
+        <Columns>
+            <RadzenDataGridColumn TItem="FailedPeriodOverview" Property="PeriodStart" Filterable="false" Title="Period Start" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="FailedPeriodOverview" Property="PeriodEnd" Filterable="false" Title="Period End" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="FailedPeriodOverview" Property="PeriodLength" Filterable="false" Title="Negative Apprecs received" TextAlign="TextAlign.Center" />
+        </Columns>
+    </RadzenDataGrid>
+</div>
 
 @code {
+    private HubConnection hubConnection;
 
+    IEnumerable<FailedPeriodOverview> globalFailPeriods;
+    IEnumerable<FailedPeriodOverview> senderFailPeriods;
+    IEnumerable<Sender> allSenders;
+
+    String selectedSender = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        globalFailPeriods = await IErrorReasonService.GetFailedApprecPeriodsGlobal();
+        allSenders = (await ISenderService.GetAllSendersAsync()).ToList();
+
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavManager.ToAbsoluteUri("/failed-apprecs-hub"))
+            .Build();
+
+        hubConnection.On<List<FailedPeriodOverview>>("ReceiveSenderData", (senderFailPeriods) =>
+        {
+            InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    async Task OnSenderChange(ChangeEventArgs e)
+    {
+        selectedSender = e.Value.ToString();
+        senderFailPeriods = await IErrorReasonService.GetFailedApprecPeriodsSender(selectedSender);
+        await hubConnection.SendAsync("SendNegativeApprecPeriodsSender", senderFailPeriods);
+    }
 }

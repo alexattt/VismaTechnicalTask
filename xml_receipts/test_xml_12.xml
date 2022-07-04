@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AppRec xmlns="http://www.kith.no/xmlstds/apprec/2004-11-21" xmlns:xsd="http://www.w3.org/2001/XMLSchema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kith.no/xmlstds/apprec/2004-11-21 AppRec-v1-2004-11-21.xsd">
+	<MsgType V="APPREC"/>
+	<MIGversion>1.0 2004-11-21</MIGversion>
+	<GenDate>2005-01-10T11:27:31</GenDate>
+	<Id>812abc17-13c7-85b2-18b7-f473d416cd17</Id>
+	<Sender>
+		<Role V="SENDER"/>
+		<HCP>
+			<Inst>
+				<Name>Kreftregisteret</Name>
+				<Id>974771381</Id>
+				<TypeId V="ENH"/>
+			</Inst>
+			<Address>
+				<Type V="PST"/>
+				<TeleAddress V="mailto:edi@kreftregisteret.no"/>
+			</Address>
+		</HCP>
+	</Sender>
+	<Receiver>
+		<Role V="RECEIVER"/>
+		<HCP>
+      <HCProf>
+        <Name>Peter Parker</Name>
+        <Id>009151346</Id>
+        <TypeId V="HPR" />
+      </HCProf>
+			<Address>
+				<Type V="PST"/>
+				<TeleAddress V="parkerp@gmail.com"/>
+			</Address>
+		</HCP>
+	</Receiver>
+	<Status V="3" DN="OK, feil i delmelding"/>
+	<Error S="2.16.578.1.12.4.1.1.8227" V="07" DN="Test error" OT="12345"/>
+	<OriginalMsgId>
+		<MsgType V="CANCER_BR" DN="Meldeskjema brystkreft"/>
+		<IssueDate>2005-01-09T08:24:31</IssueDate>
+		<Id>1f44467b-e217-431f-513d-bde54fa62378</Id>
+	</OriginalMsgId>
+</AppRec>

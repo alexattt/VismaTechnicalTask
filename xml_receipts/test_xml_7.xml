@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AppRec xmlns="http://www.kith.no/xmlstds/apprec/2004-11-21" xmlns:xsd="http://www.w3.org/2001/XMLSchema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kith.no/xmlstds/apprec/2004-11-21 AppRec-v1-2004-11-21.xsd">
+	<MsgType V="APPREC"/>
+	<MIGversion>1.0 2004-11-21</MIGversion>
+	<GenDate>2005-01-27T13:41:16</GenDate>
+	<Id>a36b5d18-d273-41a7-17ba-f712d146ca71</Id>
+	<Sender>
+		<Role V="SENDER"/>
+		<HCP>
+			<Inst>
+				<Name>Kreftregisteret</Name>
+				<Id>974771381</Id>
+				<TypeId V="ENH"/>
+			</Inst>
+			<Address>
+				<Type V="PST"/>
+				<TeleAddress V="mailto:edi@kreftregisteret.no"/>
+			</Address>
+		</HCP>
+	</Sender>
+	<Receiver>
+		<Role V="RECEIVER"/>
+		<HCP>
+      <HCProf>
+        <Name>Nora Andersen</Name>
+        <Id>009145765</Id>
+        <TypeId V="HPR" />
+      </HCProf>
+			<Address>
+				<Type V="PST"/>
+				<TeleAddress V="andersen.nora@gmail.com"/>
+			</Address>
+		</HCP>
+	</Receiver>
+	<Status V="3" DN="OK, feil i delmelding"/>
+	<Error S="2.16.578.1.12.4.1.1.8223" V="07" DN="Feilbruk av kveldstakst" OT="93495"/>
+	<Error S="2.16.578.1.12.4.1.1.8223" V="16" DN="Gammel takst brukt" OT="93498"/>
+	<OriginalMsgId>
+		<MsgType V="CANCER_BR" DN="Meldeskjema brystkreft"/>
+		<IssueDate>2005-01-16T12:25:14</IssueDate>
+		<Id>bf77321a-e675-578f-719f-bce47fa36149</Id>
+	</OriginalMsgId>
+</AppRec>

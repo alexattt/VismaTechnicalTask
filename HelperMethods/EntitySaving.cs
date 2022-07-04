@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VismaTechnicalTask.Models;
@@ -26,7 +27,7 @@ namespace VismaTechnicalTask.HelperMethods
             this.ISenderService = ISenderService;
         }
 
-        public async Task<bool> Save(AppRec apprec, List<ErrorReason> errorReasons, Sender sender, Receiver receiver)
+        public async Task<String> Save(AppRec apprec, List<ErrorReason> errorReasons, Sender sender, Receiver receiver)
         {
             bool receiverIsAdded = false;
             bool senderIsAdded = false;
@@ -63,13 +64,27 @@ namespace VismaTechnicalTask.HelperMethods
 
             if (receiverHasInfo && receiverExists == 0)
             {
-                newReceiverId = await IReceiverService.InsertReceiverAsync(receiver);
+                try
+                {
+                    newReceiverId = await IReceiverService.InsertReceiverAsync(receiver);
+                }
+                catch
+                {
+                    return $"Problem occured while saving entities, reason - Apprec with ID {apprec.Id}, Receiver problem";
+                }
                 receiverIsAdded = true;
             }
 
             if (senderHasInfo && senderExists == 0)
             {
-                newSenderId = await ISenderService.InsertSenderAsync(sender);
+                try
+                {
+                    newSenderId = await ISenderService.InsertSenderAsync(sender);
+                }
+                catch
+                {
+                    return $"Problem occured while saving entities, reason - Apprec with ID {apprec.Id}, Sender problem";
+                }
                 senderIsAdded = true;
             }
 
@@ -95,18 +110,32 @@ namespace VismaTechnicalTask.HelperMethods
                     apprec.ReceiverID = receiverExists;
                 }
 
-                await IAppRecService.InsertAppRecAsync(apprec);
+                try
+                {
+                    await IAppRecService.InsertAppRecAsync(apprec);
+                }
+                catch
+                {
+                    return $"Problem occured while saving entities, reason - Apprec with ID {apprec.Id}";
+                }
             }
 
             if (errorReasons.Any())
             {
                 foreach (var errorReason in errorReasons)
                 {
-                    await IErrorReasonService.InsertErrorReasonAsync(errorReason);
+                    try
+                    {
+                        await IErrorReasonService.InsertErrorReasonAsync(errorReason);
+                    }
+                    catch
+                    {
+                        return $"Problem occured while saving entities, reason - Apprec with ID {apprec.Id}, Error reason problem";
+                    }
                 }
             }
 
-            return true;
+            return "Success";
         }
     }
 }

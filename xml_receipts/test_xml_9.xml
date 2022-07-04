@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AppRec xmlns="http://www.kith.no/xmlstds/apprec/2004-11-21" xmlns:xsd="http://www.w3.org/2001/XMLSchema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kith.no/xmlstds/apprec/2004-11-21 AppRec-v1-2004-11-21.xsd">
+	<MsgType V="APPREC"/>
+	<MIGversion>1.0 2004-11-21</MIGversion>
+	<GenDate>2005-02-04T11:36:51</GenDate>
+	<Id>a181af3e-4191-45d7-b3f1-a320d243cd18</Id>
+	<Sender>
+		<Role V="SENDER"/>
+		<HCP>
+			<Inst>
+				<Name>Kreftregisteret</Name>
+				<Id>974771381</Id>
+				<TypeId V="ENH"/>
+			</Inst>
+			<Address>
+				<Type V="PST"/>
+				<TeleAddress V="mailto:edi@kreftregisteret.no"/>
+			</Address>
+		</HCP>
+	</Sender>
+	<Receiver>
+		<Role V="RECEIVER"/>
+		<HCP>
+			<HCProf>
+				<Name>Magnar Koman</Name>
+				<Id>009144889</Id>
+				<TypeId V="HPR"/>
+			</HCProf>
+			<Address>
+				<Type V="PST"/>
+				<TeleAddress V="mako@bottomline.no"/>
+			</Address>
+		</HCP>
+	</Receiver>
+	<Status V="1" DN="OK"/>
+	<OriginalMsgId>
+		<MsgType V="CANCER_BR" DN="Meldeskjema brystkreft"/>
+		<IssueDate>2005-01-29T15:17:43</IssueDate>
+		<Id>b07f90f1-e243-437a-b19d-b15eadc36a78</Id>
+	</OriginalMsgId>
+</AppRec>

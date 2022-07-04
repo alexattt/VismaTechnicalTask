@@ -1,7 +1,179 @@
 ﻿@page "/failed-msg-overview"
 
-<h3>FailedOverview</h3>
+@using VismaTechnicalTask.HelperModels
+@using VismaTechnicalTask.Services
+@using Microsoft.AspNetCore.SignalR.Client
+@using VismaTechnicalTask.Models
+
+@inject IErrorReasonService IErrorReasonService
+@inject ISenderService ISenderService
+@inject NavigationManager NavManager
+@implements IAsyncDisposable
+
+
+
+<h2>Failed message overview</h2>
+
+<div class="error-container global-container">
+    <h4>Top 20 delivery fail reasons globally</h4>
+    
+    <div class="input-group">
+        <label for="start">Start date:</label>
+        <input type="date" id="start" name="period-start" min="1999-01-01"
+               max="@currentDate" value="@currentDate" @onchange="OnStartDateChange">
+
+        <label for="end">End date:</label>
+        <input type="date" id="end" name="period-end" min="1999-01-01"
+               max="@currentDate" value="@currentDate" @onchange="OnEndDateChange">
+        
+        <button class="custom-btn" @onclick="() => GetErrorsGlobal()">TOP20</button>
+    </div>
+
+    @if (globalErrorTop != null)
+    {
+        <ol>
+            @foreach (var errorReason in globalErrorTop)
+            {
+                <li>@errorReason.ErrorReason - @errorReason.ErrorCount</li>
+            }
+        </ol>
+    }
+</div>
+
+<div class="error-container per-sender-container">
+    <h4>Top 5 delivery fail reasons per sender</h4>
+    
+    <div class="input-group">
+        
+        <label for="Sender">Choose sender name or ID: </label>
+        <select id="Sender" @onchange="OnSenderChange">
+            @if (!(allSenders is null))
+            {
+                <option value=""></option>
+                @foreach (var s in allSenders)
+                {
+                    @if (s.Name != null)
+                    {
+                        <option value="@s.Name">
+                            @s.Name
+                        </option>
+                    }
+                    else if (s.SenderId != null)
+                    {
+                        <option value="@s.SenderId">
+                            @s.SenderId
+                        </option>
+                    }
+                }
+            }
+        </select>
+
+        <label for="month">Choose month:</label>
+        <input type="month" id="month" name="month"
+               min="1999-01" max="@currentMonth" value="@currentMonth" @onchange="OnMonthChange">
+
+        <button class="custom-btn" @onclick="() => GetErrorsPerSender()">TOP5</button>
+    </div>
+
+    @if (senderErrorTop != null)
+    {
+        @if (senderErrorTop.Count() == 1 && senderErrorTop.First().ErrorReason.Contains("NOT ENOUGH"))
+        {
+            <div class="alert alert-primary">@senderErrorTop.First().ErrorReason</div>
+        }
+        else
+        {
+            <ol>
+                @foreach (var errorReason in senderErrorTop)
+                {
+                    <li>@errorReason.ErrorReason - @errorReason.ErrorCount</li>
+                }
+            </ol>
+        }
+    }
+
+</div>
+
+
 
 @code {
+    private HubConnection hubConnection;
 
+    IEnumerable<Sender> allSenders;
+
+    List<ErrorTop> globalErrorTop;
+    List<ErrorTop> senderErrorTop;
+
+    String currentDate = DateTime.Now.Year + "-" + DateTime.Now.Month.ToString("00") + "-" + DateTime.Now.Date.ToString("00");
+    String startDate = "";
+    String endDate = "";
+
+    String selectedSender = "";
+    String selectedMonth = "";
+    String senderStartDate = "";
+    String senderEndDate = "";
+    String currentMonth = DateTime.Now.Year + "-" + DateTime.Now.Month.ToString("00");
+
+    protected override async Task OnInitializedAsync()
+    {
+        allSenders = (await ISenderService.GetAllSendersAsync()).ToList();
+
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavManager.ToAbsoluteUri("/error-top-hub"))
+            .Build();
+
+        hubConnection.On<List<ErrorTop>>("ReceiveData", (globalErrorTop) =>
+        {
+            InvokeAsync(StateHasChanged);
+        });
+
+        hubConnection.On<List<ErrorTop>>("ReceiveData", (senderErrorTop) =>
+        {
+            InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    void OnStartDateChange(ChangeEventArgs e)
+    {
+        startDate = Convert.ToDateTime(e.Value).ToString("yyyy-MM-dd");
+    }
+
+    void OnEndDateChange(ChangeEventArgs e)
+    {
+        endDate = Convert.ToDateTime(e.Value).ToString("yyyy-MM-dd");
+    }
+
+    async Task GetErrorsGlobal()
+    {
+        globalErrorTop = await IErrorReasonService.GetTopErrorsForPeriod(startDate, endDate);
+        await hubConnection.SendAsync("SendGlobalErrorData", globalErrorTop);
+    }
+
+    void OnSenderChange(ChangeEventArgs e)
+    {
+        selectedSender = e.Value.ToString();
+    }
+
+    void OnMonthChange(ChangeEventArgs e)
+    {
+        selectedMonth = e.Value.ToString();
+        int lastDay = DateTime.DaysInMonth (Convert.ToDateTime(selectedMonth).Year, Convert.ToDateTime(selectedMonth).Month);
+
+        senderStartDate = Convert.ToDateTime(selectedMonth).ToString("yyyy-MM-dd");
+        senderEndDate = selectedMonth + "-" + lastDay;
+    }
+
+    async Task GetErrorsPerSender()
+    {
+        senderErrorTop = await IErrorReasonService.GetTopErrorsForSender(selectedSender, senderStartDate, senderEndDate);
+        await hubConnection.SendAsync("SendSenderErrorData", senderErrorTop);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await hubConnection.DisposeAsync();
+    }
 }
+

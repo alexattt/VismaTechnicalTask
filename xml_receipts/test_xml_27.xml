@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AppRec xmlns="http://www.kith.no/xmlstds/apprec/2004-11-21" xmlns:xsd="http://www.w3.org/2001/XMLSchema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kith.no/xmlstds/apprec/2004-11-21 AppRec-v1-2004-11-21.xsd">
+	<MsgType V="APPREC"/>
+	<MIGversion>1.0 2004-11-21</MIGversion>
+	<GenDate>2005-01-06T16:21:18</GenDate>
+	<Id>727ac108-ab93-5527-472c-a494d79c112</Id>
+  <Sender>
+    <Role V="SENDER"/>
+    <HCP>
+      <Inst>
+        <Name>TestInstitution</Name>
+        <Id>974771382</Id>
+        <TypeId V="ENH"/>
+      </Inst>
+      <Address>
+        <Type V="PST"/>
+        <TeleAddress V="mailto:edi@testinst.no"/>
+      </Address>
+    </HCP>
+  </Sender>
+	<Receiver>
+		<Role V="RECEIVER"/>
+		<HCP>
+      <HCProf>
+        <Name>Jason Martinsen</Name>
+        <Id>009161347</Id>
+        <TypeId V="HPR" />
+      </HCProf>
+			<Address>
+				<Type V="PST"/>
+				<TeleAddress V="jsonm@gmail.com"/>
+			</Address>
+		</HCP>
+	</Receiver>
+	<Status V="3" DN="OK, feil i delmelding"/>
+	<Error S="2.16.578.1.12.4.1.1.8223" V="07" DN="Feilbruk av kveldstakst" OT="93495"/>
+	<OriginalMsgId>
+		<MsgType V="CANCER_BR" DN="Meldeskjema brystkreft"/>
+		<IssueDate>2005-01-02T12:05:52</IssueDate>
+		<Id>1f41459b-e201-427a-527d-b1e69fa78342</Id>
+	</OriginalMsgId>
+</AppRec>
